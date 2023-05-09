@@ -4,20 +4,11 @@ using UnityEngine;
 
 public class RoadController : MonoBehaviour
 {
-    
-    void Start()
+    //oluşturmak istediğimiz road objesine ait prefab.
+    public GameObject roadPrefab;
+    public void SpawnNextRoad(Vector3 roadSpawnPosition)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        transform.position += new Vector3(0,0,transform.GetComponent<Renderer>().bounds.size.z * 4);
+        //methoda verilen noktada verilen prefabdaki road objesini oluşturur.
+        Instantiate(roadPrefab, roadSpawnPosition, Quaternion.identity);
     }
 }

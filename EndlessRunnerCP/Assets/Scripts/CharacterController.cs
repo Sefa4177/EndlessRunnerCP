@@ -8,6 +8,7 @@ public class CharacterController : MonoBehaviour
     public float jumpSpeed;
     public float slideSpeed;
     public float gravityScale;
+    private bool isMovementInProgress = false;
     private bool isOnRight, isOnLeft;
     Rigidbody rb;
 
@@ -20,7 +21,8 @@ public class CharacterController : MonoBehaviour
     void Update()
     {
         otonomMovement();
-        MovementControl();
+        //MovementControl();
+        MovementControlDelayed();
     }
 
     private void MovementControl()
@@ -44,7 +46,6 @@ public class CharacterController : MonoBehaviour
             if(isOnLeft || (!isOnLeft && !isOnRight))
             {
                 rb.AddForce(Vector3.right * slideSpeed, ForceMode.Impulse);
-                rb.velocity = new Vector3(0f, rb.velocity.y, rb.velocity.z);
                 if(!isOnLeft && !isOnRight)
                 {
                     isOnRight = true;
@@ -54,6 +55,7 @@ public class CharacterController : MonoBehaviour
             
         }
 
+        
         if(Input.GetKeyDown(KeyCode.Space) && rb.velocity.y == 0f)
         {
             rb.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
@@ -63,14 +65,64 @@ public class CharacterController : MonoBehaviour
 
     private void otonomMovement()
     {
+        //sürekli olarak ileri gitmesini sağlayan kod.
         rb.AddForce(Vector3.forward * runSpeed, ForceMode.Force);
-        rb.AddForce(Physics.gravity * gravityScale * Time.fixedDeltaTime, ForceMode.Acceleration);
+
+        //bu kodu yoruma aldım çünkü yerçekimini tam düzgün uygulayamıyordu.
+        //rb.AddForce(Physics.gravity * gravityScale * Time.fixedDeltaTime, ForceMode.Acceleration);
+
+        //yerçekimi kuvveti
+        rb.AddForce(Vector3.down * gravityScale * rb.mass);
 
     }
 
-    IEnumerator Wait(float Seconds)
+    private void MovementControlDelayed()
+{
+    if(isMovementInProgress) return;
+    
+    if(Input.GetKeyDown(KeyCode.A))
     {
-        yield return new WaitForSeconds(Seconds);
+        if(isOnRight || (!isOnLeft && !isOnRight))
+            {
+                isMovementInProgress = true;
+                StartCoroutine(DoMovement(Vector3.left * slideSpeed));
+                if(!isOnLeft && !isOnRight)
+                {
+                    isOnLeft = true;
+                }
+                isOnRight =false;
+            }
+        
     }
+    
+    if(Input.GetKeyDown(KeyCode.D))
+    {
+        if(isOnLeft || (!isOnLeft && !isOnRight))
+            {
+                isMovementInProgress = true;
+                StartCoroutine(DoMovement(Vector3.right * slideSpeed));
+                if(!isOnLeft && !isOnRight)
+                {
+                    isOnRight = true;
+                }
+                isOnLeft =false;
+            }
+        
+    }
+    
+    if(Input.GetKeyDown(KeyCode.Space) && rb.velocity.y == 0f)
+    {
+        isMovementInProgress = true;
+        StartCoroutine(DoMovement(Vector3.up * jumpSpeed));
+    }
+}
 
+    private IEnumerator DoMovement(Vector3 direction)
+{
+    rb.AddForce(direction, ForceMode.Impulse);
+    yield return new WaitForSeconds(.3f);
+    isMovementInProgress = false;
+}
+
+    
 }
