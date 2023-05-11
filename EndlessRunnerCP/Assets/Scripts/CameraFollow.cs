@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    //takip edilecek objenin tanımlanması.
-    public GameObject followObject;
-    
+    [SerializeField] private GameObject followObject;//takip edilecek objenin tanımlanması.
     
     private void FixedUpdate() 
     {
@@ -16,7 +14,7 @@ public class CameraFollow : MonoBehaviour
     //kameranın objeyi biraz arkadan ve biraz üstten takip etmesi için gerekli kod.
     void followCamera()
     {
-        transform.position = followObject.transform.position - (Vector3.forward * 3) + (Vector3.up * 2);
+        transform.position = followObject.transform.position - (Vector3.forward * 3) + (Vector3.up * 1.5f);
     }
 
     

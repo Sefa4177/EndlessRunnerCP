@@ -4,125 +4,160 @@ using UnityEngine;
 
 public class CharacterController : MonoBehaviour
 {
-    public float runSpeed;
-    public float jumpSpeed;
-    public float slideSpeed;
-    public float gravityScale;
-    private bool isMovementInProgress = false;
-    private bool isOnRight, isOnLeft;
-    Rigidbody rb;
+    #region Definitions
+    [SerializeField] private float jumpForce = 10f; // zıplama kuvveti
+    [SerializeField] private float extraGravityMultiplier = 0.6f;
+    [SerializeField] private float moveSpeed = 5f; // hareket hızı
+    [SerializeField] private float runSpeed;
+    [SerializeField] private float gravityScale;
+    private int laneIndex = 1; // başlangıçta orta şeritte olacak
+    private float laneDistance = 3.5f; // şeritler arası mesafe
+    private float leftLaneX = -3.5f; // sol şeridin X değeri
+    private float rightLaneX = 3.5f; // sağ şeridin X değeri
+    private float lastSwipeTime = 0f; // son swipe zamanı
+    private bool isGrounded = true; // zemine temas halinde mi?
+    private float speedIncreaseRate = 0.01f; // hız artış oranı (saniyede %1)
+    private float speedIncreaseTimer = 0f; // hız artışını sayacak zamanlayıcı
 
+    Animator animatorController;
+    Rigidbody rb;
+    #endregion
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        isOnLeft = false;
-        isOnRight = false;
+    }
+
+    private void Start()
+    {
+        animatorController = GetComponent<Animator>();
     }
     void Update()
-    {
+    {   
         otonomMovement();
-        //MovementControl();
-        MovementControlDelayed();
+        MovementControl();
+        IncreasedSpeed();
     }
+    
 
-    private void MovementControl()
-    {
-        
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            if(isOnRight || (!isOnLeft && !isOnRight))
-            {
-                rb.AddForce(Vector3.left * slideSpeed, ForceMode.Impulse);
-                if(!isOnLeft && !isOnRight)
-                {
-                    isOnLeft = true;
-                }
-                isOnRight =false;
-            }
-        }
-
-        if(Input.GetKeyDown(KeyCode.D))
-        {
-            if(isOnLeft || (!isOnLeft && !isOnRight))
-            {
-                rb.AddForce(Vector3.right * slideSpeed, ForceMode.Impulse);
-                if(!isOnLeft && !isOnRight)
-                {
-                    isOnRight = true;
-                }
-                isOnLeft =false;
-            }
-            
-        }
-
-        
-        if(Input.GetKeyDown(KeyCode.Space) && rb.velocity.y == 0f)
-        {
-            rb.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
-        }
-        
-    }
-
-    private void otonomMovement()
+    #region Methods
+    private void otonomMovement() //oyun başlar başlamaz otonom şekilde olacak hareketler.
     {
         //sürekli olarak ileri gitmesini sağlayan kod.
-        rb.AddForce(Vector3.forward * runSpeed, ForceMode.Force);
+        rb.AddForce(Vector3.forward * runSpeed *Time.deltaTime, ForceMode.Force);
 
         //bu kodu yoruma aldım çünkü yerçekimini tam düzgün uygulayamıyordu.
         //rb.AddForce(Physics.gravity * gravityScale * Time.fixedDeltaTime, ForceMode.Acceleration);
 
         //yerçekimi kuvveti
-        rb.AddForce(Vector3.down * gravityScale * rb.mass);
-
+        float verticalVelocity = rb.velocity.y;
+        rb.AddForce(Vector3.down * gravityScale * rb.mass * Time.deltaTime);
+        if (verticalVelocity < 0)
+        {
+            // Yere doğru düşüyorsak, yerçekimi kuvvetini arttırarak daha hızlı düşmemizi sağlayabiliriz.
+             rb.AddForce(Vector3.down * gravityScale * rb.mass * extraGravityMultiplier * Time.deltaTime);
+        }
     }
-
-    private void MovementControlDelayed()
+private void MovementControl()
 {
-    if(isMovementInProgress) return;
-    
-    if(Input.GetKeyDown(KeyCode.A))
+    if (Input.touchCount > 0)
     {
-        if(isOnRight || (!isOnLeft && !isOnRight))
+        Touch touch = Input.GetTouch(0);
+
+        if (touch.phase == TouchPhase.Moved && Time.time - lastSwipeTime > 0.2f)
+        {
+            Vector2 deltaPosition = touch.deltaPosition;
+            if (deltaPosition.y > 0f && Mathf.Abs(deltaPosition.y) > Mathf.Abs(deltaPosition.x))
             {
-                isMovementInProgress = true;
-                StartCoroutine(DoMovement(Vector3.left * slideSpeed));
-                if(!isOnLeft && !isOnRight)
-                {
-                    isOnLeft = true;
-                }
-                isOnRight =false;
+                Jump();
             }
-        
-    }
-    
-    if(Input.GetKeyDown(KeyCode.D))
-    {
-        if(isOnLeft || (!isOnLeft && !isOnRight))
+            else if (deltaPosition.x < 0f)
             {
-                isMovementInProgress = true;
-                StartCoroutine(DoMovement(Vector3.right * slideSpeed));
-                if(!isOnLeft && !isOnRight)
+                // sol şeride git
+                if (laneIndex > 0)
                 {
-                    isOnRight = true;
+                    laneIndex--;
+                    lastSwipeTime = Time.time;
                 }
-                isOnLeft =false;
             }
-        
+            else if (deltaPosition.x > 0f)
+            {
+                // sağ şeride git
+                if (laneIndex < 2)
+                {
+                    laneIndex++;
+                    lastSwipeTime = Time.time;
+                }
+            }
+        }
+
+        if (touch.phase == TouchPhase.Ended)
+        {
+            // parmak ekranın üzerinden kaldırıldı
+            StopMoving();
+        }
     }
-    
-    if(Input.GetKeyDown(KeyCode.Space) && rb.velocity.y == 0f)
+
+    // karakteri hedef pozisyona hareket ettir
+    Vector3 targetPosition = new Vector3(GetLaneXPosition(laneIndex), transform.position.y, transform.position.z);
+    transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+}
+
+private void StopMoving()
+{
+    // karakterin hareketini durdur
+    StopAllCoroutines();
+}
+
+private float GetLaneXPosition(int laneIndex)
+{
+    // verilen şerit index'ine göre X pozisyonunu hesapla
+    switch (laneIndex)
     {
-        isMovementInProgress = true;
-        StartCoroutine(DoMovement(Vector3.up * jumpSpeed));
+        case 0:
+            return leftLaneX;
+        case 1:
+            return 0f;
+        case 2:
+            return rightLaneX;
+        default:
+            return 0f;
     }
 }
 
-    private IEnumerator DoMovement(Vector3 direction)
+private void Jump()
 {
-    rb.AddForce(direction, ForceMode.Impulse);
-    yield return new WaitForSeconds(.3f);
-    isMovementInProgress = false;
+    if (isGrounded)
+    {   
+        animatorController.SetTrigger("Jump");//animasyonu çalıştır
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);// zıplama kuvvetini objeye uygula
+        isGrounded = false;
+    }
 }
 
-    
+private void OnCollisionEnter(Collision collision)
+{
+    if (collision.gameObject.CompareTag("Ground"))
+    {
+        // obje zemine temas etti, zıplama işlemi yapılabilir
+        animatorController.SetBool("IsGrounded",true);
+        isGrounded = true;
+    }
+}
+
+    private void IncreasedSpeed() // oyundaki karakterin hızını gittikçe arttırmak için kod.
+    {
+        // zamanlayıcıyı arttır
+    speedIncreaseTimer += Time.deltaTime;
+
+    // zamanlayıcı 1 saniyeyi geçtiyse hızı arttır
+    if (speedIncreaseTimer >= 1f)
+    {
+        GameButtons.Instance.score +=1;
+        runSpeed += runSpeed * speedIncreaseRate;
+        speedIncreaseTimer = 0f;
+    }
+
+    }
+
+    #endregion
 }

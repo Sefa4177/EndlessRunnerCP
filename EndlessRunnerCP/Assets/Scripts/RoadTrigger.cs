@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class RoadTrigger : MonoBehaviour
 {
-    // road controller scriptinden methodu alabilmek için tanımlama.
-    public RoadController roadController;
+    public RoadController roadController;// road controller scriptinden methodu alabilmek için tanımlama.
+    [SerializeField] private GameObject spawnLocationObject;// Yeni basılcak roadların basılacağı noktayı ayarlamak için tanımlama.
 
-    // Yeni basılcak roadların basılacağı noktayı ayarlamak için tanımlama.
-    public GameObject spawnLocationObject;
-
-    //herhangi bir obje değilde sadece karakter objesi icinden gectiğinde çalışacak.
-    //roadcontrollerdan methodu alıp buradan tetkilnemesi için buraya basıcak.
-    private void OnTriggerEnter(Collider other) 
+    private void OnTriggerEnter(Collider other) //herhangi bir obje değilde sadece karakter objesi icinden gectiğinde çalışacak.
     {
         if(other.gameObject.name.Equals("Character"))
         {
