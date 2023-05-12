@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FpsCounter : MonoBehaviour
 {
+    // bu script fps değerini ekrana bastırır bunu kullandım çünkü telefonda oynarken fps düşüyor mu görmek istedim.
     private float count;
     
     private IEnumerator Start()

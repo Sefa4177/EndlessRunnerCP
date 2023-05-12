@@ -7,10 +7,7 @@ ScriptsOnlyBuild:
     - FpsCounter
     - GameButtons
     - Obstacle
-    - ObstaclesCreate
-    - Road
-    - RoadController
-    - RoadTrigger
+    - RoadAndObtaclesController
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
     UnityEditor.TestRunner.dll:
@@ -89,33 +86,27 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1592}
     - Class: 114
-      Script: {instanceID: 1672}
+      Script: {instanceID: 2580}
     - Class: 114
-      Script: {instanceID: 2582}
+      Script: {instanceID: 2778}
     - Class: 114
-      Script: {instanceID: 2780}
+      Script: {instanceID: 2960}
     - Class: 114
-      Script: {instanceID: 2962}
+      Script: {instanceID: 3064}
     - Class: 114
-      Script: {instanceID: 3066}
+      Script: {instanceID: 5216}
     - Class: 114
-      Script: {instanceID: 3148}
+      Script: {instanceID: 5522}
     - Class: 114
-      Script: {instanceID: 4074}
+      Script: {instanceID: 5958}
     - Class: 114
-      Script: {instanceID: 5222}
+      Script: {instanceID: 5978}
     - Class: 114
-      Script: {instanceID: 5528}
+      Script: {instanceID: 6046}
     - Class: 114
-      Script: {instanceID: 5964}
+      Script: {instanceID: 6684}
     - Class: 114
-      Script: {instanceID: 5984}
-    - Class: 114
-      Script: {instanceID: 6052}
-    - Class: 114
-      Script: {instanceID: 6690}
-    - Class: 114
-      Script: {instanceID: 7498}
+      Script: {instanceID: 7492}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -145,7 +136,7 @@ ScriptsOnlyBuild:
     className: PanelRaycaster
   - hash:
       serializedVersion: 2
-      Hash: a01997b1f89e3afd8c0c2be0ad2784d7
+      Hash: 75396d9786f988e3441c3cb96eeef787
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameButtons
@@ -161,12 +152,6 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: Image
-  - hash:
-      serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: Road
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -403,10 +388,10 @@ ScriptsOnlyBuild:
     className: UnityOnDropdownValueChangedMessageListener
   - hash:
       serializedVersion: 2
-      Hash: 0d544f51c3468b584b3ce263aae48b8c
+      Hash: 28fdce2b62d099912c2b51ea5cb80a96
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: RoadTrigger
+    className: RoadAndObtaclesController
   - hash:
       serializedVersion: 2
       Hash: 0fd6822f6177297bd0eb4d83cc7a9030
@@ -437,12 +422,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core.dll
     namespaceName: Unity.VisualScripting
     className: UnityOnMouseDownMessageListener
-  - hash:
-      serializedVersion: 2
-      Hash: 988d5f8ee8d56c1e36c8eff01361888f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: RoadController
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -617,12 +596,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core.dll
     namespaceName: Unity.VisualScripting
     className: UnityOnJointBreak2DMessageListener
-  - hash:
-      serializedVersion: 2
-      Hash: b6063a22eaf5b7457df0d13b12bbd99d
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: ObstaclesCreate
   - hash:
       serializedVersion: 2
       Hash: dbfb4270852b0008a423a7418d9de4cf
@@ -1178,4 +1151,4 @@ ScriptsOnlyBuild:
   platform: 13
   scenePathNames:
   - Assets/Scenes/MainScene.unity
-  playerPath: C:/Users/Sefa/Desktop/EndlessRunnerApk/ApkVersion6.apk
+  playerPath: C:/Users/Sefa/Desktop/EndlessRunnerApk/ApkVersion8.apk

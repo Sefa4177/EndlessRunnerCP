@@ -15,6 +15,7 @@ public class Clock : MonoBehaviour
     private bool stop_clock_ = false;
     public int score;
     public static Clock instance;
+    
     #endregion
 
     //bu script sadece oyundaki sürenin ilerlemesi ve gerektiğinde kullanılması için.

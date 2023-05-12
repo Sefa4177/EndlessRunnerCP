@@ -306,10 +306,7 @@
 "Assets/Scripts/FpsCounter.cs"
 "Assets/Scripts/GameButtons.cs"
 "Assets/Scripts/Obstacle.cs"
-"Assets/Scripts/ObstaclesCreate.cs"
-"Assets/Scripts/Road.cs"
-"Assets/Scripts/RoadController.cs"
-"Assets/Scripts/RoadTrigger.cs"
+"Assets/Scripts/RoadAndObtaclesController.cs"
 -langversion:9.0
 
 /deterministic

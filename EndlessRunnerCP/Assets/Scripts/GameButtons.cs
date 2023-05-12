@@ -13,6 +13,7 @@ public class GameButtons : MonoBehaviour
     private int star_;
     [SerializeField] private GameObject LosePopUp;
     [SerializeField] private List<GameObject> StarImages;
+    [SerializeField] private Text ScoreText;
 
     #endregion
     private void Awake() 
@@ -37,7 +38,6 @@ public class GameButtons : MonoBehaviour
         if(gameOver)
         {
             doGameOver();
-            starCreate();
         }
         
     }
@@ -45,7 +45,9 @@ public class GameButtons : MonoBehaviour
     private void doGameOver()// oyunu bitiren method
     {   
         LosePopUp.SetActive(true);
-        Time.timeScale = 0;  
+        Time.timeScale = 0;
+        starCreate();
+        showScore();
     }
     private void starNumber()//oyun sonunda score a göre ekranda belirecek yıldız sayısını ayarlayan method.
     {   
@@ -71,13 +73,18 @@ public class GameButtons : MonoBehaviour
         }
 
     }
-    public void starCreate()//oyun sonunda yıldızların belirlenmesi
+    private void starCreate()//oyun sonunda yıldızların açılması
     {   
         starNumber();
         for(int star = 0 ; star < star_ ; star++)
         {
             StarImages[star].SetActive(true);
         }
+    }
+
+    private void showScore()//oyun sonunda skorun gösterilmesi için.
+    {
+        ScoreText.text =$"Score : {score}";
     }
      public void LoadScene(string sceneName)//sahne yüklemek gerektiğinde kullanılacak.
     {    

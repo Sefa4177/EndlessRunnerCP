@@ -5,18 +5,13 @@ using UnityEngine.UI;
 
 public class Obstacle : MonoBehaviour
 {
-    
-    private void OnBecameInvisible() 
-    {
-        //arkada kalan ve görünmeyen yolların destroy edilip yükün azaltılması sağlanır.
-        Destroy(gameObject);
-    }
-    private void OnTriggerEnter(Collider other) //herhangi bir obje değilde sadece karakter objesi icinden gectiğinde çalışacak.
-    {
-        
-        GameButtons.Instance.gameOver = true;
-    }
-    
-    
+    private void OnCollisionEnter(Collision other) 
+    {   
+        //herhangi bir obje değilde sadece karakter objesi çarptığında çalışacak.
+        if(other.gameObject.name.Equals("Character"))
+        {
+            GameButtons.Instance.gameOver = true;
+        }
+    } 
 
 }

@@ -6,6 +6,10 @@ public class CameraFollow : MonoBehaviour
 {
     [SerializeField] private GameObject followObject;//takip edilecek objenin tanımlanması.
     
+    private void Start() 
+    {
+        Time.timeScale = 1;// oyun yeniden başlatıldığında sahne yüklenirken önce oyunun sonundan kalan oyunu durdurma işlemi var ise bu onu düzeltiyor.
+    }
     private void FixedUpdate() 
     {
         followCamera();

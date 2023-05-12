@@ -7,24 +7,24 @@ public class CharacterController : MonoBehaviour
     #region Definitions
     [SerializeField] private float jumpForce = 10f; // zıplama kuvveti
     [SerializeField] private float extraGravityMultiplier = 0.6f;
-    [SerializeField] private float moveSpeed = 5f; // hareket hızı
-    [SerializeField] private float runSpeed;
-    [SerializeField] private float gravityScale;
+    [SerializeField] private float moveSpeed = 5f; // Yanal hareket hızı
+    [SerializeField] private float runSpeed; // koşma hızı
+    [SerializeField] private float gravityScale; //yerçekimi Büyüklüğü
     private int laneIndex = 1; // başlangıçta orta şeritte olacak
     private float laneDistance = 3.5f; // şeritler arası mesafe
     private float leftLaneX = -3.5f; // sol şeridin X değeri
     private float rightLaneX = 3.5f; // sağ şeridin X değeri
     private float lastSwipeTime = 0f; // son swipe zamanı
-    private bool isGrounded = true; // zemine temas halinde mi?
+    private bool isGrounded = true; // zemine temas halinde mi
     private float speedIncreaseRate = 0.01f; // hız artış oranı (saniyede %1)
     private float speedIncreaseTimer = 0f; // hız artışını sayacak zamanlayıcı
 
-    Animator animatorController;
-    Rigidbody rb;
+    Animator animatorController; // animatör kontrollerının tanımlanması
+    Rigidbody rb; // rigidbody Tanımlanması
     #endregion
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>(); // performans için rigidbodynin get componenti oyunun başında alınır.
     }
 
     private void Start()
@@ -39,24 +39,24 @@ public class CharacterController : MonoBehaviour
     }
     
 
-    #region Methods
-    private void otonomMovement() //oyun başlar başlamaz otonom şekilde olacak hareketler.
+#region Methods
+private void otonomMovement() //oyun başlar başlamaz otonom şekilde olacak hareketler.
+{
+     //sürekli olarak ileri gitmesini sağlayan kod.
+    rb.AddForce(Vector3.forward * runSpeed *Time.deltaTime, ForceMode.Force);
+
+    //bu kodu yoruma aldım çünkü yerçekimini tam düzgün uygulayamıyordu.
+    //rb.AddForce(Physics.gravity * gravityScale * Time.fixedDeltaTime, ForceMode.Acceleration);
+
+    //yerçekimi kuvveti
+    float verticalVelocity = rb.velocity.y;
+    rb.AddForce(Vector3.down * gravityScale * rb.mass * Time.deltaTime);
+    if (verticalVelocity < 0)
     {
-        //sürekli olarak ileri gitmesini sağlayan kod.
-        rb.AddForce(Vector3.forward * runSpeed *Time.deltaTime, ForceMode.Force);
-
-        //bu kodu yoruma aldım çünkü yerçekimini tam düzgün uygulayamıyordu.
-        //rb.AddForce(Physics.gravity * gravityScale * Time.fixedDeltaTime, ForceMode.Acceleration);
-
-        //yerçekimi kuvveti
-        float verticalVelocity = rb.velocity.y;
-        rb.AddForce(Vector3.down * gravityScale * rb.mass * Time.deltaTime);
-        if (verticalVelocity < 0)
-        {
-            // Yere doğru düşüyorsak, yerçekimi kuvvetini arttırarak daha hızlı düşmemizi sağlayabiliriz.
-             rb.AddForce(Vector3.down * gravityScale * rb.mass * extraGravityMultiplier * Time.deltaTime);
-        }
+        // Yere doğru düşüyorsak, yerçekimi kuvvetini arttırarak daha hızlı düşmemizi sağlar.
+         rb.AddForce(Vector3.down * gravityScale * rb.mass * extraGravityMultiplier * Time.deltaTime);
     }
+}
 private void MovementControl()
 {
     if (Input.touchCount > 0)
@@ -68,6 +68,7 @@ private void MovementControl()
             Vector2 deltaPosition = touch.deltaPosition;
             if (deltaPosition.y > 0f && Mathf.Abs(deltaPosition.y) > Mathf.Abs(deltaPosition.x))
             {
+                //zıpla
                 Jump();
             }
             else if (deltaPosition.x < 0f)
@@ -92,7 +93,7 @@ private void MovementControl()
 
         if (touch.phase == TouchPhase.Ended)
         {
-            // parmak ekranın üzerinden kaldırıldı
+            // parmak ekranın üzerinden kalktı.
             StopMoving();
         }
     }
@@ -139,14 +140,14 @@ private void OnCollisionEnter(Collision collision)
     if (collision.gameObject.CompareTag("Ground"))
     {
         // obje zemine temas etti, zıplama işlemi yapılabilir
-        animatorController.SetBool("IsGrounded",true);
+        animatorController.SetBool("IsGrounded",true);//bu bool animasyonu iyi hale getirmek için.
         isGrounded = true;
     }
 }
 
-    private void IncreasedSpeed() // oyundaki karakterin hızını gittikçe arttırmak için kod.
-    {
-        // zamanlayıcıyı arttır
+private void IncreasedSpeed() // oyundaki karakterin hızını gittikçe arttırmak için kod.
+{
+    // zamanlayıcıyı arttır
     speedIncreaseTimer += Time.deltaTime;
 
     // zamanlayıcı 1 saniyeyi geçtiyse hızı arttır
@@ -157,7 +158,7 @@ private void OnCollisionEnter(Collision collision)
         speedIncreaseTimer = 0f;
     }
 
-    }
+}
 
-    #endregion
+#endregion
 }
