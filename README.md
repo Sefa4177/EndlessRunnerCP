@@ -8,6 +8,8 @@
 
 ## Oynayış
 
+<img src="https://github.com/Sefa4177/EndlessRunnerCP/blob/main/Screenshot_2023-05-14-16-49-21-915_com.SCPGaming.EndlessRunnerCP.jpg" width="auto">
+
 - Oyunda Hareketler Sağ, Sol ve Üst Swipe (yani parmak kaydırma) hareketi ile olmaktadır.
 
 - Oyuna başlandığında karakterimiz otomatik ve sürekli olarak ileri doğru koşmaya başlar ve bu koşma hızı sürekli olarak her saniye hızın %1'i oranında artar.
