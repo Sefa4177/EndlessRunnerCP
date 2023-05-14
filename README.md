@@ -24,7 +24,7 @@
 
 - Play Again butonuna basılır ise oyun en baştan başlar karakterin hızı başlangıç hızına dönmüş olur.
 
-  
+  <img src="https://github.com/Sefa4177/EndlessRunnerCP/blob/main/Screenshot_2023-05-14-16-49-34-305_com.SCPGaming.EndlessRunnerCP.jpg" width="auto">
 
 ## Optimizasyon
 
